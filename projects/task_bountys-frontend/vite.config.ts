@@ -8,6 +8,7 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   define: {
+    // Fix for packages expecting 'global' in browser environment
     global: 'window',
   },
 });
