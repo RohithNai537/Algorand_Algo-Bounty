@@ -1,3 +1,5 @@
+# TaskBounty contract: A simple asset sale contract following ARC4 standard on Algorand
+
 from algopy import (
     # On Algorand, assets are native objects rather than smart contracts
     Asset,
