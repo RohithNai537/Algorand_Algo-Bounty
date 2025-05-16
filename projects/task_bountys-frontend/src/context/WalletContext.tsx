@@ -4,7 +4,7 @@ import { WalletState, WalletAccount } from '../types';
 
 // Initialize Pera Wallet connector
 const peraWallet = new PeraWalletConnect({
-  shouldShowSignTxnToast: true
+  shouldShowSignTxnToast: true,
 });
 
 // Initial wallet state
@@ -12,7 +12,7 @@ const initialState: WalletState = {
   isConnected: false,
   account: null,
   isConnecting: false,
-  error: null
+  error: null,
 };
 
 // Wallet action types
@@ -26,35 +26,13 @@ type WalletAction =
 const walletReducer = (state: WalletState, action: WalletAction): WalletState => {
   switch (action.type) {
     case 'CONNECT_REQUEST':
-      return {
-        ...state,
-        isConnecting: true,
-        error: null
-      };
+      return { ...state, isConnecting: true, error: null };
     case 'CONNECT_SUCCESS':
-      return {
-        ...state,
-        isConnected: true,
-        account: action.payload,
-        isConnecting: false,
-        error: null
-      };
+      return { ...state, isConnected: true, account: action.payload, isConnecting: false, error: null };
     case 'CONNECT_FAILURE':
-      return {
-        ...state,
-        isConnected: false,
-        account: null,
-        isConnecting: false,
-        error: action.payload
-      };
+      return { ...state, isConnected: false, account: null, isConnecting: false, error: action.payload };
     case 'DISCONNECT':
-      return {
-        ...state,
-        isConnected: false,
-        account: null,
-        isConnecting: false,
-        error: null
-      };
+      return { ...state, isConnected: false, account: null, isConnecting: false, error: null };
     default:
       return state;
   }
@@ -73,36 +51,44 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(walletReducer, initialState);
 
-  // Handle wallet account change or disconnect
   useEffect(() => {
-    // Check if there's a stored connection
+    // Load stored account on mount
     const storedAccount = localStorage.getItem('walletAccount');
     if (storedAccount) {
       try {
-        const account = JSON.parse(storedAccount);
+        const account = JSON.parse(storedAccount) as WalletAccount;
         dispatch({ type: 'CONNECT_SUCCESS', payload: account });
-      } catch (error) {
+      } catch {
         localStorage.removeItem('walletAccount');
       }
     }
 
-    // Set up event listeners
-    peraWallet.reconnectSession().then((accounts) => {
-      if (accounts.length > 0) {
-        const account: WalletAccount = {
-          address: accounts[0],
-          name: `Account ${accounts[0].substring(0, 4)}...${accounts[0].substring(accounts[0].length - 4)}`
-        };
-        dispatch({ type: 'CONNECT_SUCCESS', payload: account });
-        localStorage.setItem('walletAccount', JSON.stringify(account));
-      }
-    }).catch((error) => {
-      console.error('Reconnect error:', error);
+    // Try to reconnect session
+    peraWallet
+      .reconnectSession()
+      .then((accounts) => {
+        if (accounts.length > 0) {
+          const account: WalletAccount = {
+            address: accounts[0],
+            name: `Account ${accounts[0].substring(0, 4)}...${accounts[0].slice(-4)}`,
+          };
+          dispatch({ type: 'CONNECT_SUCCESS', payload: account });
+          localStorage.setItem('walletAccount', JSON.stringify(account));
+        }
+      })
+      .catch((error: unknown) => {
+        console.error('Reconnect error:', error);
+      });
+
+    // Listen for disconnect event
+    peraWallet.connector?.on('disconnect', () => {
+      dispatch({ type: 'DISCONNECT' });
+      localStorage.removeItem('walletAccount');
     });
 
-    // Cleanup
+    // Cleanup on unmount
     return () => {
-      // No cleanup needed for Pera Wallet
+      peraWallet.connector?.off('disconnect');
     };
   }, []);
 
@@ -114,14 +100,14 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       if (accounts && accounts.length > 0) {
         const account: WalletAccount = {
           address: accounts[0],
-          name: `Account ${accounts[0].substring(0, 4)}...${accounts[0].substring(accounts[0].length - 4)}`
+          name: `Account ${accounts[0].substring(0, 4)}...${accounts[0].slice(-4)}`,
         };
         dispatch({ type: 'CONNECT_SUCCESS', payload: account });
         localStorage.setItem('walletAccount', JSON.stringify(account));
       } else {
         dispatch({ type: 'CONNECT_FAILURE', payload: 'No accounts found' });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Connection error:', error);
       dispatch({ type: 'CONNECT_FAILURE', payload: 'Failed to connect wallet' });
     }
