@@ -16,12 +16,11 @@
       "projects/": true
     },
     "jest.disabledWorkspaceFolders": ["ROOT", "projects"],
-    "dotenv.enableAutocloaking": false
+    "dotenv.enableAutocloaking": true
   },
   "extensions": {
     "recommendations": ["joshx.workspace-terminals"]
   },
-  
   "tasks": {
     "version": "2.0.0",
     "tasks": [
@@ -58,7 +57,10 @@
             "name": "Deploy contracts",
             "folder": "task_bountys-contracts"
           },
-          { "name": "Run dApp", "folder": "task_bountys-frontend" }
+          {
+            "name": "Run dApp",
+            "folder": "task_bountys-frontend"
+          }
         ],
         "presentation": {
           "hidden": false,
@@ -67,4 +69,4 @@
       }
     ]
   }
-  }
+}
