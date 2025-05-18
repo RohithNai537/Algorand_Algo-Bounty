@@ -13,7 +13,7 @@ const BrowseTasks: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('open');
+  const [selectedStatus, setSelectedStatus] = useState(''); // Changed from 'open' to ''
   const [minReward, setMinReward] = useState('');
   const [maxReward, setMaxReward] = useState('');
   const [view, setView] = useState<'grid' | 'list'>('grid');
@@ -53,6 +53,7 @@ const BrowseTasks: React.FC = () => {
   });
 
   const statusOptions = [
+    { value: '', label: 'All Statuses' },  // Added option for all statuses
     { value: 'open', label: 'Open' },
     { value: 'claimed', label: 'Claimed' },
     { value: 'completed', label: 'Completed' },
@@ -176,7 +177,7 @@ const BrowseTasks: React.FC = () => {
               size="sm"
               onClick={() => {
                 setSelectedCategory('');
-                setSelectedStatus('open');
+                setSelectedStatus('');
                 setMinReward('');
                 setMaxReward('');
                 setSearchTerm('');
