@@ -93,6 +93,7 @@ const TaskSubmission: React.FC = () => {
         <button 
           onClick={() => navigate(-1)}
           className="text-sm text-primary-600 hover:text-primary-800 flex items-center"
+          aria-label="Back to previous page"
         >
           <ArrowLeft size={16} className="mr-1" /> Back to task
         </button>
