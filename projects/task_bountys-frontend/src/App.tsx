@@ -28,7 +28,7 @@ function App() {
             <Route path="/tasks/:id" element={<TaskDetail />} />
             <Route path="/my-tasks" element={<MyTasks />} />
             <Route path="/my-tasks/:id" element={<TaskSubmission />} />
-            <Route path="/ViewPostTasks" element={<ViewPostTasks />} /> {/* Added route for ViewPostTasks */}
+            <Route path="/view-post-tasks" element={<ViewPostTasks />} /> {/* Fixed route casing */}
             <Route path="/voting" element={<DAOVoting />} />
             <Route path="/defi" element={<DeFi />} />
             <Route path="*" element={<Navigate to="/" replace />} />
