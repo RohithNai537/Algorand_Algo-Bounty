@@ -24,8 +24,8 @@ const Dashboard: React.FC = () => {
     <Layout>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Welcome back!</h1>
-        <p className="text-slate-600">
-          Your wallet: <span className="font-medium">{state.account?.address.substring(0, 6)}...{state.account?.address.substring(state.account?.address.length - 4)}</span>
+        <p className="text-slate-600" title={state.account?.address}>
+          Your wallet: <span className="font-medium cursor-default">{state.account?.address.substring(0, 6)}...{state.account?.address.substring(state.account?.address.length - 4)}</span>
         </p>
       </div>
 
