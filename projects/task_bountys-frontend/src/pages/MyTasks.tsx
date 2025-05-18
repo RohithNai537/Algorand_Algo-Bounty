@@ -5,7 +5,7 @@ import TaskCard from '../components/UI/TaskCard';
 import EmptyState from '../components/UI/EmptyState';
 import Button from '../components/UI/Button';
 import Select from '../components/UI/Select';
-import { Clock, Search, CheckCircle } from 'lucide-react';
+import { Clock, Search, CheckCircle, X } from 'lucide-react';
 import { useTask } from '../context/TaskContext'; // Import useTask hook
 
 const MyTasks: React.FC = () => {
@@ -35,6 +35,8 @@ const MyTasks: React.FC = () => {
     navigate(`/my-tasks/${taskId}`);
   };
 
+  const clearFilter = () => setSelectedStatus('all');
+
   useEffect(() => {
     // Additional side-effects or data fetching can go here if necessary
   }, [state.claimedTasks]);
@@ -51,7 +53,7 @@ const MyTasks: React.FC = () => {
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium text-slate-900">Task Status</h2>
-              <div className="w-48">
+              <div className="flex items-center space-x-2 w-48">
                 <Select
                   label=""
                   name="status"
@@ -60,6 +62,15 @@ const MyTasks: React.FC = () => {
                   onChange={(e) => setSelectedStatus(e.target.value)}
                   register={() => ({})}
                 />
+                {selectedStatus !== 'all' && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={clearFilter} 
+                    aria-label="Clear filter"
+                    icon={<X size={16} />}
+                  />
+                )}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -103,7 +114,7 @@ const MyTasks: React.FC = () => {
               <p className="text-slate-600 mb-4">Try selecting a different status filter.</p>
               <Button
                 variant="outline"
-                onClick={() => setSelectedStatus('all')}
+                onClick={clearFilter}
               >
                 View All Tasks
               </Button>
