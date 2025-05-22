@@ -121,7 +121,8 @@ Before running the project locally, ensure you have:
 **Clone the repository:**
 
 git clone https://github.com/your-username/AlgoBounty.git
-cd AlgoBounty
+
+`cd AlgoBounty`
 
 **Install frontend dependencies:**
 
