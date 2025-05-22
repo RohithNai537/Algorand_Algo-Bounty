@@ -34,19 +34,16 @@ Run the following commands within the project folder:
 
 - **Setup Project**
 
-<pre> ```bash algokit project bootstrap all ``` </pre>
+ `algokit project bootstrap all `
 
 ## Configure Environment
 
-<pre>
-```bash
-algokit generate env-file -a target_network localnet
-</pre> ```
+`algokit generate env-file -a target_network localnet`
 
 
 ## Start LocalNet
 
-algokit localnet start
+`algokit localnet start`
 
 
 ## Development Workflow
@@ -55,22 +52,22 @@ algokit localnet start
 
 **Build Contracts**
 
-algokit project run build
+`algokit project run build`
 
 To build a specific contract:
 
-algokit project run build -- hello_world
+`algokit project run build -- hello_world`
 
 
 
 **Deploy Contracts**
 
-algokit project deploy localnet
+`algokit project deploy localnet`
 
 
 To deploy a specific contract:
 
-algokit project deploy localnet -- hello_world
+`algokit project deploy localnet -- hello_world`
 
 
 ### VS Code
@@ -103,7 +100,7 @@ By default, `HelloWorld` contract exists under `smart_contracts/task_bountys/`.
 
 To add a new one:
 
-algokit generate smart-contract
+`algokit generate smart-contract`
 
 
 Then:
@@ -115,7 +112,7 @@ Then:
 
 To generate a `.env.{target_network}`:
 
-algokit generate env-file
+`algokit generate env-file`
 
 
 ## Debugging Smart Contracts
