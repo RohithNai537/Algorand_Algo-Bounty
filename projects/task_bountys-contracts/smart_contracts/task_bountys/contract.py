@@ -5,7 +5,7 @@ from algopy import (
     Asset,
     # Global is used to access global variables from the network
     Global,
-    # Txn is used access information about the current transcation
+    # Txn is used to access information about the current transaction
     Txn,
     # By default, all numbers in the AVM are 64-bit unsigned integers
     UInt64,
@@ -27,11 +27,11 @@ class TaskBounty(arc4.ARC4Contract):
     # We want to store the price for the asset we are selling
     unitary_price: UInt64
 
-    # We want create_application to be a plublic ABI method
+    # We want create_application to be a public ABI method
     @arc4.abimethod(
         # There are certain actions that a contract call can do
         # Some examples are UpdateApplication, DeleteApplication, and NoOp
-        # NoOp is a call that does nothing special after it is exected
+        # NoOp is a call that does nothing special after it is executed
         allow_actions=["NoOp"],
         # Require that this method is only callable when creating the app
         create="require",
@@ -72,8 +72,8 @@ class TaskBounty(arc4.ARC4Contract):
         # Just like asserting fields in Txn, we can assert fields in the PaymentTxn
         # We can do this only because it is grouped atomically with our app call
 
-        # Just because we made it an argument to the method, there's no gurantee
-        # it is being sent to the aplication's address so we need to manually assert
+        # Just because we made it an argument to the method, there's no guarantee
+        # it is being sent to the application's address so we need to manually assert
         assert mbr_pay.receiver == Global.current_application_address
 
         # On Algorand, each account has a minimum balance requirement (MBR)
