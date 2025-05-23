@@ -138,15 +138,20 @@ git clone https://github.com/your-username/AlgoBounty.git
 
 Visit http://localhost:3000 to view the running dApp.
 
-## 👤 Author
+## 👤 Author 
 
-**MULINTI ROHITH NAIDU**  
-🛠️ Role: Blockcahin Developer & Project Creator  
-📧 Email: [mulintirohan159@gmail.com](mailto:mulintirohan159@gmail.com)  
-🔗 LinkedIn: [linkedin.com/in/rohith-naidu-16a2004mar](https://www.linkedin.com/in/rohith-naidu-16a2004mar)
+### 🚀 **Mulinti Rohith Naidu**
+
+🧱 **Blockchain Developer** | 🧩 **Project Creator**  
+📧 **Email**: [mulintirohan159@gmail.com](mailto:mulintirohan159@gmail.com)  
+🔗 **LinkedIn**: [Visit Profile](https://linkedin.com/in/rohith-naidu-16a2004mar)
+
+---
+
+> Passionate about building decentralized solutions and innovative tech projects.
 
 
-***License***
+## License
 
 This project is licensed under the MIT License.
 
