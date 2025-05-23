@@ -1,6 +1,7 @@
 _tasks:
   - "echo '==== Successfully generated new .env file 🚀 ===='"
 
+# === Network Selection ===
 target_network:
   type: str
   help: Name of your target network.
@@ -18,18 +19,19 @@ custom_network_name:
   placeholder: "custom"
   when: "{{ not use_generic_env and target_network == 'custom' }}"
 
+# === Network Flags ===
+is_customnet:
+  type: bool
+  help: Whether to deploy on custom network.
+  placeholder: "true"
+  default: "{{ target_network == 'custom' and not use_generic_env }}"
+  when: 'false'
+
 is_localnet:
   type: bool
   help: Whether to deploy on localnet.
   placeholder: "true"
   default: "{{ target_network == 'localnet' and not use_generic_env }}"
-  when: 'false'
-
-is_testnet:
-  type: bool
-  help: Whether to deploy on testnet.
-  placeholder: "true"
-  default: "{{ target_network == 'testnet' and not use_generic_env }}"
   when: 'false'
 
 is_mainnet:
@@ -39,11 +41,11 @@ is_mainnet:
   default: "{{ target_network == 'mainnet' and not use_generic_env }}"
   when: 'false'
 
-is_customnet:
+is_testnet:
   type: bool
-  help: Whether to deploy on custom network.
+  help: Whether to deploy on testnet.
   placeholder: "true"
-  default: "{{ target_network == 'custom' and not use_generic_env }}"
+  default: "{{ target_network == 'testnet' and not use_generic_env }}"
   when: 'false'
 
 _templates_suffix: ".j2"
