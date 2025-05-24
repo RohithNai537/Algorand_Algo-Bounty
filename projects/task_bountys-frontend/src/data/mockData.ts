@@ -3,7 +3,7 @@ import { addDays } from 'date-fns';
 
 // Mock user stats
 export const mockUserStats: UserStats = {
-  totalRewardsEarned: 2450,
+  totalRewardsEarned: 2500,
   tasksCompleted: 8,
   activeClaims: 2,
 };
