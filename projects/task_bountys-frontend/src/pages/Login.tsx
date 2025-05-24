@@ -7,14 +7,15 @@ import Layout from '../components/Layout/Layout';
 
 const Login: React.FC = () => {
   const { state, connectWallet } = useWallet();
+  const { isConnected, isConnecting, error } = state;
   const navigate = useNavigate();
 
   // Redirect to dashboard if already connected
   useEffect(() => {
-    if (state.isConnected) {
+    if (isConnected) {
       navigate('/dashboard');
     }
-  }, [state.isConnected, navigate]);
+  }, [isConnected, navigate]);
 
   const handleConnect = async () => {
     await connectWallet();
@@ -28,6 +29,7 @@ const Login: React.FC = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-400 bg-opacity-10 rounded-full blur-3xl"></div>
         <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-secondary-400 bg-opacity-10 rounded-full blur-3xl"></div>
         
+        {/* Main login content */}
         <div className="z-10 relative">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-primary-500 text-white mb-6 shadow-lg shadow-primary-200">
@@ -44,6 +46,7 @@ const Login: React.FC = () => {
             </p>
           </div>
 
+          {/* Login card */}
           <div className="glassmorphism p-8 max-w-md w-full mx-auto rounded-2xl shadow-xl">
             <h3 className="text-xl font-semibold text-secondary-800 mb-4">Login to AlgoBounty</h3>
             <p className="text-slate-600 mb-6">
@@ -55,16 +58,16 @@ const Login: React.FC = () => {
               size="lg" 
               fullWidth 
               onClick={handleConnect}
-              isLoading={state.isConnecting}
+              isLoading={isConnecting}
               icon={<ArrowRight size={20} />}
               className="mb-4"
             >
               Connect Pera Wallet
             </Button>
             
-            {state.error && (
+            {error && (
               <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm mt-4">
-                {state.error}
+                {error}
               </div>
             )}
             
@@ -73,6 +76,7 @@ const Login: React.FC = () => {
             </p>
           </div>
           
+          {/* Footer help text */}
           <div className="mt-12 text-center text-sm text-slate-500">
             <p>Need help? Contact support@algobounty.io</p>
           </div>
