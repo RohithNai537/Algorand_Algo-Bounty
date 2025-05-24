@@ -13,56 +13,57 @@ const BrowseTasks: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState(''); // Changed from 'open' to ''
+  const [selectedStatus, setSelectedStatus] = useState('');
   const [minReward, setMinReward] = useState('');
   const [maxReward, setMaxReward] = useState('');
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
-  
+
   const categories = getAllCategories();
-  
+
   // Filter tasks based on criteria
   const filteredTasks = mockTasks.filter((task) => {
-    // Filter by search term
-    const matchesSearch = searchTerm 
-      ? task.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch = searchTerm
+      ? task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         task.description.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
-    
-    // Filter by category
-    const matchesCategory = selectedCategory 
-      ? task.category === selectedCategory 
+
+    const matchesCategory = selectedCategory
+      ? task.category === selectedCategory
       : true;
-    
-    // Filter by status
+
     const matchesStatus = selectedStatus
       ? task.status === selectedStatus
       : true;
-    
-    // Filter by min reward
+
     const matchesMinReward = minReward
       ? task.reward.amount >= Number(minReward)
       : true;
-    
-    // Filter by max reward
+
     const matchesMaxReward = maxReward
       ? task.reward.amount <= Number(maxReward)
       : true;
-    
-    return matchesSearch && matchesCategory && matchesStatus && matchesMinReward && matchesMaxReward;
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesStatus &&
+      matchesMinReward &&
+      matchesMaxReward
+    );
   });
 
   const statusOptions = [
-    { value: '', label: 'All Statuses' },  // Added option for all statuses
+    { value: '', label: 'All Statuses' },
     { value: 'open', label: 'Open' },
     { value: 'claimed', label: 'Claimed' },
     { value: 'completed', label: 'Completed' },
     { value: 'disputed', label: 'Disputed' },
   ];
-  
+
   const categoryOptions = [
     { value: '', label: 'All Categories' },
-    ...categories.map(category => ({ value: category, label: category })),
+    ...categories.map((category) => ({ value: category, label: category })),
   ];
 
   const handleViewTask = (task: Task) => {
@@ -77,8 +78,8 @@ const BrowseTasks: React.FC = () => {
             <h1 className="text-2xl font-bold text-slate-900 mb-2">Browse Tasks</h1>
             <p className="text-slate-600">Find and claim bounties that match your skills</p>
           </div>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={() => navigate('/post')}
             icon={<PackagePlus size={18} />}
           >
