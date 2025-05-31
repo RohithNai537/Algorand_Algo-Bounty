@@ -193,6 +193,19 @@ def vote_extend_deadline(self) -> None:
     vote_count = Global.group_size  # simplistic placeholder
     if vote_count >= self.extension_threshold:
         self.deadline += UInt64(86400)  # Extend by 1 day
+
+    user_streaks: dict[arc4.Address, UInt64]
+
+@arc4.abimethod
+def on_task_approved(self) -> None:
+    assert Txn.sender == Global.creator_address
+    self.user_streaks[self.task_claimer] = self.user_streaks.get(self.task_claimer, UInt64(0)) + UInt64(1)
+
+    if self.user_streaks[self.task_claimer] >= UInt64(5):
+        itxn.Payment(
+            receiver=self.task_claimer,
+            amount=Int(100000),  # small bonus
+        ).submit()
     
     
 
