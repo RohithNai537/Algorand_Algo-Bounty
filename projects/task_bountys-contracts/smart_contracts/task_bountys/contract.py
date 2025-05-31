@@ -110,6 +110,16 @@ class TaskBounty(arc4.ARC4Contract):
             asset_receiver=Txn.sender,
             asset_amount=quantity,
         ).submit()
+@arc4.abimethod
+def withdraw_assets(self, amount: UInt64) -> None:
+    assert Txn.sender == Global.creator_address, "Unauthorized"
+
+    itxn.AssetTransfer(
+        xfer_asset=self.asset_id,
+        asset_receiver=Global.creator_address,
+        asset_amount=amount
+    ).submit()
+
 
     @arc4.abimethod(
         # This method is called when the application is deleted
