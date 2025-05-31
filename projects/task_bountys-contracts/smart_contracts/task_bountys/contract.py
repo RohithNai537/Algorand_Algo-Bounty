@@ -1,3 +1,4 @@
+import re
 from algopy import (
     # On Algorand, assets are native objects rather than smart contracts
     Asset,
@@ -13,6 +14,9 @@ from algopy import (
     gtxn,
     # itxn is used to send transactions from within a smart contract
     itxn,
+    task_status: UInt64  # 0=open,1=claimed,2=submitted,3=completed
+    task_proof: abi.DynamicBytes  # Store submitted proof (IPFS hash)
+
 )
 
 
@@ -154,10 +158,16 @@ class TaskBounty(arc4.ARC4Contract):
 
 
     @arc4.abimethod
-    def submit_task(self) -> None:
+    def submit_task(self, proof: abi.DynamicBytes) -> None:
         assert self.task_status == UInt64(1), "Task not in claimed state"
         assert Txn.sender == self.task_claimer, "Only claimer can submit"
+
+        proof_str = proof.decode("utf-8")
+        assert self.IPFS_REGEX.match(proof_str), "Invalid IPFS proof format"
+
+        self.task_proof = proof
         self.task_status = UInt64(2)  # submitted
+
 
     @arc4.abimethod
     def approve_task(self) -> None:
