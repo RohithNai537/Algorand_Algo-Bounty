@@ -21,6 +21,11 @@ class TaskBounty(arc4.ARC4Contract):
     # Every asset has a unique ID
     # We want to store the ID for the asset we are selling
     asset_id: UInt64
+    deadline: UInt64  # Unix timestamp for task deadline
+    task_claimer: abi.StaticBytes[Address]
+    task_quantity: UInt64
+    task_status: UInt64  # 0=open,1=claimed,2=submitted,3=completed
+
 
     # We want to store the price for the asset we are selling
     unitary_price: UInt64
@@ -34,16 +39,33 @@ class TaskBounty(arc4.ARC4Contract):
         # Require that this method is only callable when creating the app
         create="require",
     )
-    def create_application(
-        self,
-        # The ID of the asset we're selling
-        asset_id: Asset,
-        # The initial sale price
-        unitary_price: UInt64,
-    ) -> None:
-        # Save the values we passed in to our method in the contract's state
+   @arc4.abimethod(create="require", allow_actions=["NoOp"])
+    def create_application(self, asset_id: Asset, unitary_price: UInt64, deadline: UInt64) -> None:
         self.asset_id = asset_id.id
         self.unitary_price = unitary_price
+        self.task_status = UInt64(0)  # open
+        self.deadline = deadline
+
+    @arc4.abimethod
+    def expire_task(self) -> None:
+        # Only allow expiration if task is open, claimed, or submitted AND past deadline
+        assert self.task_status != UInt64(3), "Task already completed"
+        assert Global.latest_timestamp > self.deadline, "Deadline not reached"
+
+        # Refund escrowed reward to creator if task was claimed (reward locked)
+        if self.task_status == UInt64(1) or self.task_status == UInt64(2):
+            refund_amount = self.unitary_price * self.task_quantity
+            # Send refund ALGO from app escrow to creator
+            itxn.Payment(
+                receiver=Global.creator_address,
+                amount=refund_amount,
+            ).submit()
+
+        # Reset task status to open for possible re-claim
+        self.task_status = UInt64(0)
+        self.task_claimer = abi.StaticBytes[Address]()  # clear claimer
+        self.task_quantity = UInt64(0)
+
 
     @arc4.abimethod
     def set_price(self, unitary_price: UInt64) -> None:
@@ -154,6 +176,8 @@ class TaskBounty(arc4.ARC4Contract):
     @arc4.abimethod
     def get_task_status(self) -> UInt64:
         return self.task_status
+
+    
 
 
 
