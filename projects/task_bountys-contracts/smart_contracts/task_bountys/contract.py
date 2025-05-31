@@ -133,6 +133,20 @@ def set_deadline(self, new_deadline: UInt64) -> None:
 def is_task_expired(self) -> bool:
     return Global.latest_timestamp > self.deadline
 
+@arc4.abimethod
+def penalize_claimer(self, penalty_amount: UInt64) -> None:
+    assert Txn.sender == Global.creator_address, "Only creator can penalize"
+    assert self.task_status == UInt64(2) or self.task_status == UInt64(4), "Only during submission/dispute"
+
+    itxn.Payment(
+        receiver=Global.creator_address,
+        amount=penalty_amount
+    ).submit()
+
+    self.task_status = UInt64(0)  # reopen task
+    self.task_claimer = arc4.Address("")
+    self.task_quantity = UInt64(0)
+
 
     @arc4.abimethod(
         # This method is called when the application is deleted
