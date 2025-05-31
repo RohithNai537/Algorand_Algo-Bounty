@@ -121,6 +121,14 @@ def withdraw_assets(self, amount: UInt64) -> None:
     ).submit()
 
 
+deadline: UInt64  # new state variable
+
+@arc4.abimethod
+def set_deadline(self, new_deadline: UInt64) -> None:
+    assert Txn.sender == Global.creator_address, "Only creator can set deadline"
+    self.deadline = new_deadline
+
+
     @arc4.abimethod(
         # This method is called when the application is deleted
         allow_actions=["DeleteApplication"]
