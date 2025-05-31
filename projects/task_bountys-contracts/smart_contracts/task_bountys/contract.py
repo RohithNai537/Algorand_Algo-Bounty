@@ -147,6 +147,15 @@ def penalize_claimer(self, penalty_amount: UInt64) -> None:
     self.task_claimer = arc4.Address("")
     self.task_quantity = UInt64(0)
 
+@arc4.abimethod
+def reassign_task(self) -> None:
+    assert self.task_status == UInt64(1), "Task not in claimed state"
+    assert Global.latest_timestamp > self.deadline, "Deadline not passed"
+
+    self.task_claimer = arc4.Address("")
+    self.task_quantity = UInt64(0)
+    self.task_status = UInt64(0)
+    
 
     @arc4.abimethod(
         # This method is called when the application is deleted
