@@ -155,6 +155,13 @@ def reassign_task(self) -> None:
     self.task_claimer = arc4.Address("")
     self.task_quantity = UInt64(0)
     self.task_status = UInt64(0)
+
+task_counts: dict[arc4.Address, UInt64]
+
+@arc4.abimethod
+def claim_task(self, quantity: UInt64, escrow_payment: gtxn.PaymentTransaction) -> None:
+    # ... existing checks
+    self.task_counts[Txn.sender] = self.task_counts.get(Txn.sender, UInt64(0)) + UInt64(1)
     
 
     @arc4.abimethod(
