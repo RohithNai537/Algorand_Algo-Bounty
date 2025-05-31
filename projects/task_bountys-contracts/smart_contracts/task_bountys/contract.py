@@ -58,6 +58,56 @@ class TaskBounty(arc4.ARC4Contract):
     def get_price(self) -> UInt64:
         return self.unitary_price
 
+    class TaskBounty(arc4.ARC4Contract):
+    asset_id: UInt64
+    unitary_price: UInt64
+
+    task_claimer: abi.StaticBytes[Address]
+    task_quantity: UInt64
+    task_status: UInt64  # 0 = open, 1 = claimed, 2 = submitted, 3 = completed
+
+    @arc4.abimethod(create="require", allow_actions=["NoOp"])
+    def create_application(
+        self,
+        asset_id: Asset,
+        unitary_price: UInt64,
+    ) -> None:
+        self.asset_id = asset_id.id
+        self.unitary_price = unitary_price
+        self.task_status = UInt64(0)  # Initial state: open
+
+    @arc4.abimethod
+    def claim_task(self, quantity: UInt64) -> None:
+        assert self.task_status == UInt64(0), "Task not open"
+        self.task_claimer = Txn.sender
+        self.task_quantity = quantity
+        self.task_status = UInt64(1)  # claimed
+
+    @arc4.abimethod
+    def submit_task(self) -> None:
+        assert self.task_status == UInt64(1), "Task not in claimed state"
+        assert Txn.sender == self.task_claimer, "Only claimer can submit"
+        self.task_status = UInt64(2)  # submitted
+
+    @arc4.abimethod
+    def approve_task(self) -> None:
+        assert self.task_status == UInt64(2), "Task not submitted yet"
+        assert Txn.sender == Global.creator_address, "Unauthorized"
+
+        # Send reward
+        itxn.AssetTransfer(
+            xfer_asset=self.asset_id,
+            asset_receiver=self.task_claimer,
+            asset_amount=self.task_quantity,
+        ).submit()
+
+        self.task_status = UInt64(3)  # completed
+
+    @arc4.abimethod
+    def get_task_status(self) -> UInt64:
+        return self.task_status
+
+
 
     # Before any account can receive an asset, it must opt-in to it
     # This method enables the application to opt-in to the asset
