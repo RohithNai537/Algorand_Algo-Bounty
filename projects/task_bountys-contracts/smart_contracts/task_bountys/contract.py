@@ -54,6 +54,10 @@ class TaskBounty(arc4.ARC4Contract):
 
         # Save the new price
         self.unitary_price = unitary_price
+    @arc4.abimethod
+    def get_price(self) -> UInt64:
+        return self.unitary_price
+
 
     # Before any account can receive an asset, it must opt-in to it
     # This method enables the application to opt-in to the asset
