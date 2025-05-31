@@ -47,10 +47,9 @@ class TaskBounty(arc4.ARC4Contract):
 
     @arc4.abimethod
     def set_price(self, unitary_price: UInt64) -> None:
-        # We don't want anyone to be able to come in and modify the price
-        # You could implement some sort of RBAC,
-        # but in this case just making sure the caller is the app creator works
-        assert Txn.sender == Global.creator_address
+    assert Txn.sender == Global.creator_address, "Only creator can update price"
+    self.unitary_price = unitary_price
+
 
         # Save the new price
         self.unitary_price = unitary_price
