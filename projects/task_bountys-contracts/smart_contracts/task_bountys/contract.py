@@ -181,6 +181,18 @@ def auto_reopen(self) -> None:
     self.task_claimer = arc4.Address("")
     self.task_quantity = UInt64(0)
     self.task_status = UInt64(0)
+
+extension_votes: dict[arc4.Address, bool]
+extension_threshold: UInt64
+
+@arc4.abimethod
+def vote_extend_deadline(self) -> None:
+    assert not self.extension_votes[Txn.sender], "Already voted"
+    self.extension_votes[Txn.sender] = True
+
+    vote_count = Global.group_size  # simplistic placeholder
+    if vote_count >= self.extension_threshold:
+        self.deadline += UInt64(86400)  # Extend by 1 day
     
     
 
