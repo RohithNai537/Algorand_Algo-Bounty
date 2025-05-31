@@ -75,10 +75,8 @@ class TaskBounty(arc4.ARC4Contract):
     def set_price(self, unitary_price: UInt64) -> None:
     assert Txn.sender == Global.creator_address, "Only creator can update price"
     self.unitary_price = unitary_price
-
-
-        # Save the new price
-        self.unitary_price = unitary_price
+    self.unitary_price = unitary_price
+    
     @arc4.abimethod
     def get_price(self) -> UInt64:
         return self.unitary_price
@@ -122,6 +120,11 @@ class TaskBounty(arc4.ARC4Contract):
         self.voting_active = True
         self.yes_votes = UInt64(0)
         self.no_votes = UInt64(0)
+
+    @arc4.abimethod
+    def leave_feedback(self, feedback: abi.String) -> None:
+        assert self.task_status == UInt64(3), "Task must be completed"
+        self.task_feedback[Txn.sender] = feedback
 
     @arc4.abimethod
     def vote(self, support: bool) -> None:
