@@ -57,6 +57,12 @@ class TaskBounty(arc4.ARC4Contract):
     @arc4.abimethod
     def get_price(self) -> UInt64:
         return self.unitary_price
+    @arc4.abimethod
+    def dispute_task(self) -> None:
+        assert self.task_status == UInt64(2), "Task must be submitted to dispute"
+        assert Txn.sender == self.task_claimer or Txn.sender == Global.creator_address, "Only claimer or creator can  dispute"
+        self.task_status = UInt64(4)  # disputed
+
 
     class TaskBounty(arc4.ARC4Contract):
     asset_id: UInt64
