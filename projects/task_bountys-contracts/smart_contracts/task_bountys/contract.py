@@ -162,6 +162,16 @@ task_counts: dict[arc4.Address, UInt64]
 def claim_task(self, quantity: UInt64, escrow_payment: gtxn.PaymentTransaction) -> None:
     # ... existing checks
     self.task_counts[Txn.sender] = self.task_counts.get(Txn.sender, UInt64(0)) + UInt64(1)
+
+user_ratings: dict[arc4.Address, abi.DynamicArray[UInt64]]
+
+@arc4.abimethod
+def rate_claimer(self, stars: UInt64) -> None:
+    assert self.task_status == UInt64(3), "Task must be completed"
+    assert Txn.sender == Global.creator_address
+    assert stars >= UInt64(1) and stars <= UInt64(5), "Invalid rating"
+
+    self.user_ratings[self.task_claimer].append(stars)
     
 
     @arc4.abimethod(
