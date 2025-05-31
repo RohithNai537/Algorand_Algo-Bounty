@@ -129,6 +129,11 @@ def set_deadline(self, new_deadline: UInt64) -> None:
     self.deadline = new_deadline
 
 
+@arc4.abimethod
+def is_task_expired(self) -> bool:
+    return Global.latest_timestamp > self.deadline
+
+
     @arc4.abimethod(
         # This method is called when the application is deleted
         allow_actions=["DeleteApplication"]
