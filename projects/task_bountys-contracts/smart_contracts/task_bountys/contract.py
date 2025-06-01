@@ -352,7 +352,18 @@ def get_task_summary(self) -> (UInt64, UInt64, UInt64, arc4.Address):
     Returns: (status, quantity, price, claimer)
     """
     return self.task_status, self.task_quantity, self.unitary_price, self.task_claimer
-    
+
+
+
+@arc4.abimethod
+def cancel_task_by_creator(self) -> None:
+    assert Txn.sender == Global.creator_address, "Only creator can cancel"
+    assert self.task_status == UInt64(0), "Can only cancel if task is open"
+
+    # Reset task fields
+    self.task_status = UInt64(5)  # use 5 for cancelled
+    self.task_quantity = UInt64(0)
+    self.task_claimer = arc4.Address("")
     
 
     @arc4.abimethod(
