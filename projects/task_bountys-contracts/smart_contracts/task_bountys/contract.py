@@ -345,6 +345,13 @@ def on_task_approved(self) -> None:
             receiver=self.task_claimer,
             amount=Int(100000),  # small bonus
         ).submit()
+
+@arc4.abimethod
+def get_task_summary(self) -> (UInt64, UInt64, UInt64, arc4.Address):
+    """
+    Returns: (status, quantity, price, claimer)
+    """
+    return self.task_status, self.task_quantity, self.unitary_price, self.task_claimer
     
     
 
