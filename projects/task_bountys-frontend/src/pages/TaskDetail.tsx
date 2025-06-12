@@ -107,7 +107,10 @@ const TaskDetail: React.FC = () => {
         </div>
         
         <div className="mb-6">
-          <h2 className="text-lg font-medium text-slate-900 mb-2">Created By</h2>
+         <div className="flex items-center mt-2 text-sm text-slate-500">
+  <Calendar size={16} className="mr-2" />
+  <span>Created on {format(new Date(task.createdAt), 'MMM d, yyyy, h:mm a')}</span>
+</div>
           <div className="flex items-center">
             <User size={18} className="text-slate-500 mr-2" />
             <span className="text-slate-700 font-mono">{task.creator.substring(0, 10)}...{task.creator.substring(task.creator.length - 4)}</span>
