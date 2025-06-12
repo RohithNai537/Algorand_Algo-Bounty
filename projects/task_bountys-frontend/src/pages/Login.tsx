@@ -68,9 +68,16 @@ const Login: React.FC = () => {
               </div>
             )}
             
-            <p className="text-xs text-slate-500 mt-4 text-center">
-              By connecting, you agree to the terms of service and privacy policy.
-            </p>
+           <p className="text-xs text-slate-500 mt-4 text-center">
+  By connecting, you agree to our{' '}
+  <a href="/terms" className="underline hover:text-primary-600">
+    Terms of Service
+  </a>{' '}
+  and{' '}
+  <a href="/privacy" className="underline hover:text-primary-600">
+    Privacy Policy
+  </a>.
+</p>
           </div>
           
           <div className="mt-12 text-center text-sm text-slate-500">
