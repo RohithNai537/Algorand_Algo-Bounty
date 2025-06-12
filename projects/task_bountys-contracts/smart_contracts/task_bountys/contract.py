@@ -378,6 +378,17 @@ def propose_task_cancellation(task_id: abi.Uint64, proposer: abi.Account) -> Exp
         Approve()
     )
 
+    @external(authorize=Authorize.only_creator)
+def force_resolve_dispute(task_id: abi.Uint64) -> Expr:
+    return Seq(
+        Assert(self.task_status[task_id.get()] == TASK_DISPUTED),
+        Assert(Global.latest_timestamp() > self.dispute_timestamp[task_id.get()] + Int(86400 * 3)),  # 3 days
+        If(self.dispute_votes_yes[task_id.get()] > self.dispute_votes_no[task_id.get()])
+        .Then(self.task_status[task_id.get()].set(TASK_APPROVED))
+        .Else(self.task_status[task_id.get()].set(TASK_REJECTED)),
+        Approve()
+    )
+
 
     
     
