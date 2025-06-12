@@ -364,6 +364,22 @@ def cancel_task_by_creator(self) -> None:
     self.task_status = UInt64(5)  # use 5 for cancelled
     self.task_quantity = UInt64(0)
     self.task_claimer = arc4.Address("")
+
+
+
+    @external
+def propose_task_cancellation(task_id: abi.Uint64, proposer: abi.Account) -> Expr:
+    return Seq(
+        Assert(self.task_status[task_id.get()] == TASK_OPEN),
+        Assert(self.task_cancel_proposed[task_id.get()].not_()),
+        self.task_cancel_proposed[task_id.get()].set(Int(1)),
+        self.task_cancel_votes_yes[task_id.get()].set(Int(1)),  # initial proposer vote
+        self.has_voted_cancel[task_id.get(), proposer.address()].set(Int(1)),
+        Approve()
+    )
+
+
+    
     
 
     @arc4.abimethod(
