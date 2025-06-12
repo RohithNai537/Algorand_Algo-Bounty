@@ -389,7 +389,19 @@ def force_resolve_dispute(task_id: abi.Uint64) -> Expr:
         Approve()
     )
 
-
+@external(authorize=Authorize.only_creator)
+def extend_deadline(task_id: abi.Uint64, new_deadline: abi.Uint64) -> Expr:
+    return Seq(
+        Assert(
+            Or(
+                self.task_status[task_id.get()] == TASK_OPEN,
+                self.task_status[task_id.get()] == TASK_CLAIMED
+            )
+        ),
+        Assert(new_deadline.get() > self.task_deadline[task_id.get()]),
+        self.task_deadline[task_id.get()].set(new_deadline.get()),
+        Approve()
+    )
     
     
 
