@@ -423,6 +423,22 @@ def vote_dispute(task_id: abi.Uint64, vote_yes: abi.Bool, voter: abi.Account) ->
     )   
     
 
+@external
+def list_disputed_tasks(*, output: abi.DynamicArray[abi.String]) -> Expr:
+    i = ScratchVar(TealType.uint64)
+    results = ScratchVar(TealType.bytes)
+    return Seq(
+        output.set([
+            App.globalGet(Bytes("dispute_0")),
+            App.globalGet(Bytes("dispute_1")),
+            App.globalGet(Bytes("dispute_2")),
+            App.globalGet(Bytes("dispute_3")),
+            App.globalGet(Bytes("dispute_4"))
+        ]),
+    )
+
+
+    
     @arc4.abimethod(
         # This method is called when the application is deleted
         allow_actions=["DeleteApplication"]
