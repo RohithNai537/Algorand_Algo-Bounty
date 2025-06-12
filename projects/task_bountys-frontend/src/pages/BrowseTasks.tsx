@@ -20,6 +20,15 @@ const BrowseTasks: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   
   const categories = getAllCategories();
+
+  const [sortOption, setSortOption] = useState(''); // default: no sorting
+
+const sortOptions = [
+  { value: '', label: 'No Sorting' },
+  { value: 'reward_high', label: 'Highest Reward' },
+  { value: 'deadline_soon', label: 'Earliest Deadline' },
+];
+
   
   // Filter tasks based on criteria
   const filteredTasks = mockTasks.filter((task) => {
