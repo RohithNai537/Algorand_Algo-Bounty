@@ -402,7 +402,25 @@ def extend_deadline(task_id: abi.Uint64, new_deadline: abi.Uint64) -> Expr:
         self.task_deadline[task_id.get()].set(new_deadline.get()),
         Approve()
     )
-    
+
+    @external
+def vote_dispute(task_id: abi.Uint64, vote_yes: abi.Bool, voter: abi.Account) -> Expr:
+    return Seq(
+        Assert(self.task_status[task_id.get()] == TASK_DISPUTED),
+        # Prevent double voting
+        Assert(self.has_voted[task_id.get(), voter.address()].not_()),
+        self.has_voted[task_id.get(), voter.address()].set(Int(1)),
+        If(vote_yes.get()).Then(
+            self.dispute_votes_yes[task_id.get()].set(
+                self.dispute_votes_yes[task_id.get()] + Int(1)
+            )
+        ).Else(
+            self.dispute_votes_no[task_id.get()].set(
+                self.dispute_votes_no[task_id.get()] + Int(1)
+            )
+        ),
+        Approve()
+    )   
     
 
     @arc4.abimethod(
