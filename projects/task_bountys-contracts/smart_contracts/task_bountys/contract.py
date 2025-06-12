@@ -437,7 +437,13 @@ def list_disputed_tasks(*, output: abi.DynamicArray[abi.String]) -> Expr:
         ]),
     )
 
-
+@arc4.abimethod
+def is_refund_eligible(self) -> bool:
+    return And(
+        self.task_status == UInt64(1),  # Active
+        Global.latest_timestamp > self.deadline,
+        Len(self.task_proof_hash) == Int(0)
+    )
     
     @arc4.abimethod(
         # This method is called when the application is deleted
