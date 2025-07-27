@@ -444,6 +444,19 @@ def is_refund_eligible(self) -> bool:
         Global.latest_timestamp > self.deadline,
         Len(self.task_proof_hash) == Int(0)
     )
+
+
+@arc4.abimethod
+def get_active_task_info(self) -> (UInt64, UInt64, abi.StaticBytes[Address], UInt64):
+    """
+    Returns:
+        - Task status
+        - Task quantity
+        - Claimer address
+        - Deadline
+    """
+    return self.task_status, self.task_quantity, self.task_claimer, self.deadline
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
