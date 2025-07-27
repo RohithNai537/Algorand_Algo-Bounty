@@ -457,6 +457,11 @@ def get_active_task_info(self) -> (UInt64, UInt64, abi.StaticBytes[Address], UIn
     """
     return self.task_status, self.task_quantity, self.task_claimer, self.deadline
 
+    @arc4.abimethod
+def has_user_voted_extension(self, user: arc4.Address) -> bool:
+    return self.extension_votes.get(user, False)
+
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
