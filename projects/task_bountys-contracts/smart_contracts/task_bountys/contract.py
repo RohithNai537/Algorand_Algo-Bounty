@@ -461,6 +461,12 @@ def get_active_task_info(self) -> (UInt64, UInt64, abi.StaticBytes[Address], UIn
 def has_user_voted_extension(self, user: arc4.Address) -> bool:
     return self.extension_votes.get(user, False)
 
+@arc4.abimethod
+def get_all_user_ratings(self, user: arc4.Address) -> abi.DynamicArray[UInt64]:
+    """
+    Returns all rating values received by a user.
+    """
+    return self.user_ratings.get(user, abi.DynamicArray[UInt64]([]))
 
     
     @arc4.abimethod(
