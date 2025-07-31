@@ -468,6 +468,18 @@ def get_all_user_ratings(self, user: arc4.Address) -> abi.DynamicArray[UInt64]:
     """
     return self.user_ratings.get(user, abi.DynamicArray[UInt64]([]))
 
+@arc4.abimethod
+def commit_to_task(self) -> None:
+    """
+    Allows a user to register intent to take on a task without claiming it.
+    Useful for task interest tracking and DAO-based planning.
+    """
+    assert self.task_status == UInt64(0), "Task must be open"
+    if not hasattr(self, "task_commitments"):
+        self.task_commitments: dict[arc4.Address, bool] = {}
+    self.task_commitments[Txn.sender] = True
+
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
