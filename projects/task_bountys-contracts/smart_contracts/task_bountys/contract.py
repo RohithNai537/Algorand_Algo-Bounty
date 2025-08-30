@@ -492,6 +492,16 @@ def update_application(self) -> None:
     # ARC4 handles replacement logic — no custom code needed
     return
 
+@arc4.abimethod(
+    allow_actions=["ClearState"]
+)
+def clear_state(self) -> None:
+    """
+    Allows a user to clear their local state with the contract.
+    Useful for freeing up minimum balance requirements.
+    """
+    # No extra logic required — ARC4 handles state clearing
+    return
 
 
     
