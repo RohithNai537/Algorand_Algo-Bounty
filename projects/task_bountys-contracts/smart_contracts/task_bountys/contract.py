@@ -480,6 +480,20 @@ def commit_to_task(self) -> None:
     self.task_commitments[Txn.sender] = True
 
 
+@arc4.abimethod(
+    allow_actions=["UpdateApplication"]
+)
+def update_application(self) -> None:
+    """
+    Allows the creator to update the application logic.
+    Typically used when deploying a new version of the contract.
+    """
+    assert Txn.sender == Global.creator_address, "Only creator can update application"
+    # ARC4 handles replacement logic — no custom code needed
+    return
+
+
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
