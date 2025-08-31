@@ -503,6 +503,16 @@ def clear_state(self) -> None:
     # No extra logic required — ARC4 handles state clearing
     return
 
+@arc4.abimethod(
+    allow_actions=["CloseOut"]
+)
+def close_out(self) -> None:
+    """
+    Allows a user to voluntarily close out their local state with the contract.
+    Useful if they no longer wish to interact with this app.
+    """
+    # Could also include custom cleanup logic (e.g., refund deposits or reset mappings)
+    return
 
     
     @arc4.abimethod(
