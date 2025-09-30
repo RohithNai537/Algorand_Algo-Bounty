@@ -545,6 +545,13 @@ def bulk_claim_tasks(self, quantities: abi.DynamicArray[UInt64]) -> None:
         self.task_quantity = q
         self.task_status = UInt64(1)  # claimed
 
+@arc4.abimethod
+def get_task_history(self, user: arc4.Address) -> abi.DynamicArray[UInt64]:
+    """
+    Returns the number of tasks claimed by a user over time.
+    """
+    return self.task_counts.get(user, abi.DynamicArray[UInt64]([]))
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
