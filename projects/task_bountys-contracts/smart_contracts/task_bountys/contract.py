@@ -531,6 +531,20 @@ def withdraw_rewards(self, amount: UInt64) -> None:
         asset_amount=amount,
     ).submit()
 
+
+@arc4.abimethod
+def bulk_claim_tasks(self, quantities: abi.DynamicArray[UInt64]) -> None:
+    """
+    Allows a user to claim multiple tasks in a single transaction.
+    Useful for high-throughput task assignments.
+    """
+    assert all(q > UInt64(0) for q in quantities), "Quantities must be positive"
+    for q in quantities:
+        assert self.task_status == UInt64(0), "Task not open"
+        self.task_claimer = Txn.sender
+        self.task_quantity = q
+        self.task_status = UInt64(1)  # claimed
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
