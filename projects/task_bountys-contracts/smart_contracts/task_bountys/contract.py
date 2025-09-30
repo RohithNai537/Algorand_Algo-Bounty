@@ -514,6 +514,23 @@ def close_out(self) -> None:
     # Could also include custom cleanup logic (e.g., refund deposits or reset mappings)
     return
 
+
+
+
+@arc4.abimethod
+def withdraw_rewards(self, amount: UInt64) -> None:
+    """
+    Allows the task claimer to withdraw earned asset rewards partially.
+    """
+    assert Txn.sender == self.task_claimer, "Only claimer can withdraw rewards"
+    assert self.task_status == UInt64(3), "Task not completed yet"
+
+    itxn.AssetTransfer(
+        xfer_asset=self.asset_id,
+        asset_receiver=Txn.sender,
+        asset_amount=amount,
+    ).submit()
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
