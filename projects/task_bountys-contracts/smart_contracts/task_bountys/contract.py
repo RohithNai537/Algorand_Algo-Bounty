@@ -552,6 +552,17 @@ def get_task_history(self, user: arc4.Address) -> abi.DynamicArray[UInt64]:
     """
     return self.task_counts.get(user, abi.DynamicArray[UInt64]([]))
 
+
+
+@arc4.abimethod
+def emergency_pause(self, pause: bool) -> None:
+    """
+    Allows the creator to pause or unpause the contract in emergencies.
+    When paused, new claims, submissions, and approvals should be blocked.
+    """
+    assert Txn.sender == Global.creator_address, "Only creator can toggle pause state"
+    self.paused = pause
+
     
     @arc4.abimethod(
         # This method is called when the application is deleted
